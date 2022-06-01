@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-import json
-import sys
-import os
 import csv
 import requests
 import argparse
@@ -14,8 +11,8 @@ requests.packages.urllib3.disable_warnings()
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--fortigate', default='13.52.224.85:10443', help='Firewall IP Address')
-    parser.add_argument('--token', default='6Q0rG8600wHGhhtb8Hts1qrxpdqGx7', help='API Token')
+    parser.add_argument('--fortigate', default='', help='Firewall IP Address')
+    parser.add_argument('--token', default='', help='API Token')
     parser.add_argument('--time', default='1', help='Time period to query cpu stats')
     parser.add_argument('--devlist', default='cpu.csv', help='CPU usage over time.')
     args = parser.parse_args()

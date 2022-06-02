@@ -6,13 +6,14 @@ import argparse
 import ssl
 import datetime
 import time
+import pprint
 ssl._create_default_https_context = ssl._create_unverified_context
 requests.packages.urllib3.disable_warnings() 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--fortigate', default='jmahaffey-api-test.fortidemo.fortinet.com:10403', help='Firewall IP Address')
-    parser.add_argument('--token', default='', help='API Token')
+    parser.add_argument('--fortigate', default='192.168.101.201:14000', help='Firewall IP Address')
+    parser.add_argument('--token', default='8Q1HccpdH4nk3sn9m5mdz8Nxf8pkbg', help='API Token')
     parser.add_argument('--interval', default='1', help='Time period to query cpu stats 1-min, 10-min, 30-min, 1-hour, 12-hour')
     parser.add_argument('--devlist', default='cpu.csv', help='CPU usage over time.')
     parser.add_argument('--version', default='6.4', help='Fortigate version')
@@ -70,7 +71,7 @@ def main():
     
     elif args.version < '7.0': 
         try:
-            address_url = 'https://{}/api/v2/monitor/system/resource/usage?scope=global&resource=cpu&interval={}-min'.format(args.fortigate, args.interval)
+            address_url = 'https://{}/api/v2/monitor/system/vdom-resource?vdom=root'.format(args.fortigate)
             headers = {
                 'Authorization': 'Bearer' + args.token, 
                 'content-type': 'application/json'
@@ -91,7 +92,7 @@ def main():
                 # Write logs to csv file
                 data_file = open('cpu.csv', 'a+')
                 csv_writer = csv.writer(data_file)
-                csv_writer.writerow([str(cpu.json()['results']['cpu'][0]['current']), 'Current CPU Percentage', datetime.datetime.now()])
+                csv_writer.writerow([str(cpu.json()['results']['cpu']), 'Current CPU Percentage', datetime.datetime.now()])
                 time.sleep(10)
         # Close Log File
         data_file.close()

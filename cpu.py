@@ -13,7 +13,7 @@ requests.packages.urllib3.disable_warnings()
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--fortigate', default='jmahaffey-api-test.fortidemo.fortinet.com:10403', help='Firewall IP Address')
-    parser.add_argument('--token', default='dkzHfy5bqGN38hxbjGd114sjGpqx0c', help='API Token')
+    parser.add_argument('--token', default='', help='API Token')
     parser.add_argument('--interval', default='10', help='Time period to query cpu stats 1-min, 10-min, 30-min, 1-hour, 12-hour')
     parser.add_argument('--devlist', default='cpu.csv', help='CPU usage over time.')
     parser.add_argument('--version', default='6.4', help='Fortigate version')

@@ -12,8 +12,8 @@ requests.packages.urllib3.disable_warnings()
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--fortigate', default='jmahaffey-api-test.fortidemo.fortinet.com:10403', help='Firewall IP Address')
-    parser.add_argument('--token', default='', help='API Token')
-    parser.add_argument('--interval', default='10', help='Time period to query cpu stats 1-min, 10-min, 30-min, 1-hour, 12-hour')
+    parser.add_argument('--token', default='ckgn4cjHGg1H05513jn7G57Qw3wqcj', help='API Token')
+    parser.add_argument('--interval', default='1', help='Time period to query cpu stats 1-min, 10-min, 30-min, 1-hour, 12-hour')
     parser.add_argument('--devlist', default='cpu.csv', help='CPU usage over time.')
     parser.add_argument('--version', default='6.4', help='Fortigate version')
     args = parser.parse_args()
@@ -78,17 +78,23 @@ def main():
 
         except:
             print('Error logging into Fortigate')
-
-        try:
-            cpu = requests.get(address_url, headers=headers, verify=False)
-        except:
-            print('Invalid response')
         
-        # Write logs to csv file
-        data_file = open('cpu.csv', 'a+')
-        csv_writer = csv.writer(data_file)
-        csv_writer.writerow([str(cpu.json()['results']['cpu'][0]['current']), '{}-min Average'.format(args.interval)])
-        
+        endTime = datetime.datetime.now() + datetime.timedelta(minutes=int(args.interval))
+        while True:
+            if datetime.datetime.now() >= endTime:
+                break
+            else:
+                try:
+                    cpu = requests.get(address_url, headers=headers, verify=False)
+                except:
+                    print('Invalid response')
+                # Write logs to csv file
+                data_file = open('cpu.csv', 'a+')
+                csv_writer = csv.writer(data_file)
+                csv_writer.writerow([str(cpu.json()['results']['cpu'][0]['current']), 'Current CPU Percentage', datetime.datetime.now()])
+                time.sleep(10)
+        # Close Log File
+        data_file.close()
 
 if __name__ == '__main__':
    main()
